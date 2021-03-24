@@ -30,9 +30,11 @@ bool check_valid(passport_data data){
 }
 
 bool check_valid_strict(passport_data data){
+    //Check if it has the necessar
     if(data.byr.empty() || data.iyr.empty() || data.eyr.empty() || data.hgt.empty() || data.hcl.empty() || data.ecl.empty() || data.pid.empty() ){
         return false;
     }
+    
     //Check byr, iyr and eyr
     int byr , iyr, eyr;
     byr = std::stoi(data.byr);
@@ -41,26 +43,31 @@ bool check_valid_strict(passport_data data){
     if(byr > 2002 || byr < 1920) return false;
     if(iyr > 2020 || iyr < 2010) return false;
     if(eyr > 2030 || eyr < 2020) return false;
+    
     //Check height
     int hgt = std::stoi(data.hgt);
-    if(data.hgt.find('c')){
+    if(data.hgt.find('c') != std::string::npos){
         if(hgt < 150 || hgt > 193) return false;
     }
     else{
         if(hgt < 59 || hgt > 76) return false;
     }
+    
     //Check hair color
     if(data.hcl[0] != '#') return false;
     for(int i = 1; i < data.hcl.size(); i++){
         if(std::isalnum(data.hcl[i]) == 0 || (data.hcl[i] > 'f' && data.hcl[i] < 'z')) return false;
     }
+    
     //Check eye color
     std::vector<std::string> eye_colors_list = {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"};
     for(int i = 0; i < eye_colors_list.size(); i++){
         if(std::find(std::begin(eye_colors_list), std::end(eye_colors_list), data.ecl) == std::end(eye_colors_list)) return false;
     }
+    
     //Check passport id
     if(data.pid.size() != 9 || (!std::all_of(data.pid.begin(), data.pid.end(), ::isdigit)) ) return false;
+    
     return true;
 }
 
